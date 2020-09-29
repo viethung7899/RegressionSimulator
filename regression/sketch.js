@@ -4,9 +4,15 @@
 let X = [];
 let Y = [];
 
+// Plotting X
+const plotX = [];
+for (let x = 0; x <= 1; x += 0.05) {
+  plotX.push(x);
+}
+const tensorPlotX = tf.tensor1d(plotX);
+
 // parameters for machine learning
-const a = tf.scalar(Math.random(1)).variable();
-const b = tf.scalar(Math.random(1)).variable();
+let a, b, c, d;
 
 // Stochastic Gradient Descent
 const learningRate = 0.5;
@@ -14,23 +20,32 @@ const optimizer = tf.train.sgd(learningRate);
 
 // y = f(x) = ax + b
 const linear = (x) => a.mul(x).add(b);
-const quadratic = 0
-const cubic = 0;
+const quadratic = (x) => a.mul(tf.square(x)).add(b.mul(x)).add(c);
+const cubic = (x) =>
+  a
+    .mul(tf.pow(x, [3]))
+    .add(b.mul(tf.square(x)))
+    .add(c.mul(x))
+    .add(d);
+
+let predict = quadratic;
 
 // root mean square erroe
 const loss = (pred, label) => pred.sub(label).square().mean();
 
 const train = (tensorX, tensorY) => {
-  optimizer.minimize(() => loss(linear(tensorX), tensorY));
+  optimizer.minimize(() => loss(predict(tensorX), tensorY));
 };
 
 // Drawing
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  const canvas = createCanvas(windowWidth, windowHeight);
+  canvas.mouseClicked(addPoint);
+  resetCanvas();
 }
 
 function draw() {
-  background(51);
+  background(42);
   showPoints();
 
   // Train the model
@@ -42,14 +57,31 @@ function draw() {
       train(tensorX, tensorY);
     });
 
-    drawLine();
+    drawCurve();
   }
 
   // console.log(tf.memory().numTensors);
 }
 
-// Click the points
-function mouseClicked() {
+// Reset the canvas
+function resetCanvas() {
+  console.log('Reset');
+  X = [];
+  Y = [];
+
+  if (a) a.dispose();
+  if (b) b.dispose();
+  if (c) c.dispose();
+  if (d) d.dispose();
+
+  a = tf.tidy(() => tf.scalar(Math.random(1)).variable());
+  b = tf.tidy(() => tf.scalar(Math.random(1)).variable());
+  c = tf.tidy(() => tf.scalar(Math.random(1)).variable());
+  d = tf.tidy(() => tf.scalar(Math.random(1)).variable());
+}
+
+// Add point
+function addPoint() {
   const normX = map(mouseX, 0, windowWidth, 0, 1);
   const normY = map(mouseY, 0, windowHeight, 0, 1);
   X.push(normX);
@@ -90,3 +122,23 @@ function drawLine() {
   line(x0, y0, x1, y1);
 }
 
+function drawCurve() {
+  const tensorPlotY = tf.tidy(() => predict(plotX));
+  const plotY = tensorPlotY.dataSync();
+  tensorPlotY.dispose();
+
+  beginShape();
+  noFill();
+  stroke(255);
+  strokeWeight(2);
+  for (let i = 0; i < plotX.length; i++) {
+    const x = map(plotX[i], 0, 1, 0, windowWidth);
+    const y = map(plotY[i], 0, 1, 0, windowHeight);
+    vertex(x, y);
+  }
+  endShape();
+}
+
+// Utils
+const button = document.getElementById('reset');
+button.addEventListener('click', resetCanvas);
