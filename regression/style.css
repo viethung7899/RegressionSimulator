@@ -17,7 +17,6 @@
   opacity: 100%;
   transition-duration: 0.5s;
   transition: ease-in-out;
-  
 }
 
 .controller h1 {
@@ -43,4 +42,3 @@
   background-color: white;
   color: black;
 }
-
