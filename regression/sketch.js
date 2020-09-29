@@ -6,7 +6,7 @@ let Y = [];
 
 // Plotting X
 const plotX = [];
-for (let x = 0; x <= 1; x += 0.05) {
+for (let x = 0; x <= 1; x += 0.01) {
   plotX.push(x);
 }
 const tensorPlotX = tf.tensor1d(plotX);
@@ -15,20 +15,20 @@ const tensorPlotX = tf.tensor1d(plotX);
 let a, b, c, d;
 
 // Stochastic Gradient Descent
-const learningRate = 0.5;
-const optimizer = tf.train.sgd(learningRate);
+const learningRate = 0.1;
+const optimizer = tf.train.adam(learningRate);
 
 // y = f(x) = ax + b
 const linear = (x) => a.mul(x).add(b);
-const quadratic = (x) => a.mul(tf.square(x)).add(b.mul(x)).add(c);
+const quadratic = (x) => a.mul(tf.square(x)).mul(b.mul(x)).add(c);
 const cubic = (x) =>
   a
-    .mul(tf.pow(x, [3]))
-    .add(b.mul(tf.square(x)))
+    .mul(tf.pow(x, tf.scalar(3)))
+    .add(b.mul(tf.pow(x, [2])))
     .add(c.mul(x))
     .add(d);
 
-let predict = quadratic;
+let predict = cubic;
 
 // root mean square erroe
 const loss = (pred, label) => pred.sub(label).square().mean();
@@ -99,27 +99,6 @@ function showPoints() {
   }
 
   noFill();
-}
-
-// Draw line
-function drawLine() {
-  const x = tf.tensor1d([0, 1]);
-  const y = tf.tidy(() => linear(x));
-
-  const xs = x.dataSync();
-  const ys = y.dataSync();
-
-  x.dispose();
-  y.dispose();
-
-  const x0 = map(xs[0], 0, 1, 0, windowWidth);
-  const y0 = map(ys[0], 0, 1, 0, windowHeight);
-  const x1 = map(xs[1], 0, 1, 0, windowWidth);
-  const y1 = map(ys[1], 0, 1, 0, windowHeight);
-
-  stroke(255);
-  strokeWeight(2);
-  line(x0, y0, x1, y1);
 }
 
 function drawCurve() {
