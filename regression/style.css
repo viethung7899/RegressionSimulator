@@ -1,0 +1,46 @@
+* {
+  padding: 0;
+  margin: 0;
+  color: whitesmoke;
+  font-family: monospace;
+}
+
+.controller {
+  position: absolute;
+  margin: 1rem;
+  padding: 1em;
+  background-color: rgba(255, 255, 255, 0.2);
+  opacity: 10%;
+}
+
+.controller:hover {
+  opacity: 100%;
+  transition-duration: 0.5s;
+  transition: ease-in-out;
+  
+}
+
+.controller h1 {
+  padding-bottom: 1rem;
+}
+
+.controller h3 {
+  padding: 0.5rem 0;
+}
+
+.option {
+  margin: 0.5rem 0;
+}
+
+.controller button {
+  margin: 0.5rem 0;
+  background-color: transparent;
+  border: solid 1px white;
+  padding: 0.5rem;
+}
+
+.controller button:hover {
+  background-color: white;
+  color: black;
+}
+
