@@ -21,7 +21,7 @@ const optimizer = tf.train.adam(learningRate);
 // y = f(x) = ax + b
 const functions = {
   linear: (x) => a.mul(x).add(b),
-  quadratic: (x) => a.mul(tf.square(x)).mul(b.mul(x)).add(c),
+  quadratic: (x) => a.mul(tf.square(x)).add(b.mul(x)).add(c),
   cubic: (x) =>
     a
       .mul(tf.pow(x, tf.scalar(3)))
