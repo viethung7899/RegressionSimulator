@@ -19,16 +19,18 @@ const learningRate = 0.1;
 const optimizer = tf.train.adam(learningRate);
 
 // y = f(x) = ax + b
-const linear = (x) => a.mul(x).add(b);
-const quadratic = (x) => a.mul(tf.square(x)).mul(b.mul(x)).add(c);
-const cubic = (x) =>
-  a
-    .mul(tf.pow(x, tf.scalar(3)))
-    .add(b.mul(tf.pow(x, [2])))
-    .add(c.mul(x))
-    .add(d);
+const functions = {
+  linear: (x) => a.mul(x).add(b),
+  quadratic: (x) => a.mul(tf.square(x)).mul(b.mul(x)).add(c),
+  cubic: (x) =>
+    a
+      .mul(tf.pow(x, tf.scalar(3)))
+      .add(b.mul(tf.pow(x, [2])))
+      .add(c.mul(x))
+      .add(d),
+};
 
-let predict = cubic;
+let predict = functions.linear;
 
 // root mean square erroe
 const loss = (pred, label) => pred.sub(label).square().mean();
@@ -65,10 +67,13 @@ function draw() {
 
 // Reset the canvas
 function resetCanvas() {
-  console.log('Reset');
   X = [];
   Y = [];
 
+  resetFunction();
+}
+
+function resetFunction() {
   if (a) a.dispose();
   if (b) b.dispose();
   if (c) c.dispose();
@@ -119,5 +124,16 @@ function drawCurve() {
 }
 
 // Utils
+
+// Reset button
 const button = document.getElementById('reset');
 button.addEventListener('click', resetCanvas);
+
+// Radio button
+const options = document.getElementsByName('fitting-line');
+options.forEach((option) =>
+  option.addEventListener('click', () => {
+    resetFunction();
+    predict = functions[option.value];
+  })
+);
