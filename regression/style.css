@@ -10,7 +10,7 @@
   margin: 1rem;
   padding: 1em;
   background-color: rgba(255, 255, 255, 0.2);
-  opacity: 10%;
+  opacity: 50%;
 }
 
 .controller:hover {
@@ -20,7 +20,11 @@
 }
 
 .controller h1 {
-  padding-bottom: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.controller p {
+  padding-bottom: 0.5rem;
 }
 
 .controller h3 {

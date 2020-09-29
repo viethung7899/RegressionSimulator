@@ -14,7 +14,7 @@ const tensorPlotX = tf.tensor1d(plotX);
 // parameters for machine learning
 let a, b, c, d;
 
-// Stochastic Gradient Descent
+
 const learningRate = 0.1;
 const optimizer = tf.train.adam(learningRate);
 
@@ -49,7 +49,6 @@ function setup() {
 function draw() {
   background(42);
   showPoints();
-
   // Train the model
   if (X.length) {
     tf.tidy(() => {
